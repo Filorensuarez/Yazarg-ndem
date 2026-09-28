@@ -1,0 +1,8 @@
+let category="Tümü",day="Bugün",articles=[];
+const esc=s=>(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+async function load(){try{articles=await fetch("data/articles.json?"+Date.now()).then(r=>r.json())}catch(e){articles=[]}render()}
+function render(){const rows=articles.filter(x=>(category==="Tümü"||x.category===category)&&x.day===day);document.querySelector("#list").innerHTML=rows.length?rows.map(x=>`<article class="card"><div class="meta">${esc(x.category)} · ${esc(x.source)}</div><h2>${esc(x.title)}</h2><div class="meta">${esc(x.author)}</div><div class="actions"><a href="${x.url}" target="_blank" rel="noopener">Yazıyı Oku</a><button onclick='speak(${JSON.stringify((x.title||"")+" — "+(x.summary||""))})'>Sesli Oku</button></div></article>`).join(""):`<div class="empty">Bu bölümde henüz yazı yok.</div>`}
+function speak(t){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="tr-TR";speechSynthesis.speak(u)}
+document.querySelectorAll("#cats button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#cats button").forEach(x=>x.classList.remove("active"));b.classList.add("active");category=b.dataset.cat;render()});
+document.querySelectorAll("#days button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#days button").forEach(x=>x.classList.remove("active"));b.classList.add("active");day=b.dataset.day;render()});
+load();

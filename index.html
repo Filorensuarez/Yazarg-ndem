@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YazarGündem</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><h1>YazarGündem</h1><p>Bugünün ve dünün köşe yazıları</p></header>
+<nav id="cats">
+<button class="active" data-cat="Tümü">Tümü</button>
+<button data-cat="Ekonomi">Ekonomi</button>
+<button data-cat="Siyaset">Siyaset</button>
+<button data-cat="Gündem">Gündem</button>
+</nav>
+<main>
+<div id="days"><button class="active" data-day="Bugün">Bugün</button><button data-day="Dün">Dün</button></div>
+<section id="list"></section>
+</main>
+<footer>YazarGündem · Yazılar kaynak yayınlarda açılır.</footer>
+<script src="app.js"></script>
+</body></html>
