@@ -35,6 +35,11 @@ WEB_SOURCES = [
         "url": "https://www.cumhuriyet.com.tr/yazarlar",
         "domain": "cumhuriyet.com.tr",
     },
+    {
+        "name": "Hürriyet",
+        "url": "https://www.hurriyet.com.tr/yazarlar/",
+        "domain": "hurriyet.com.tr",
+    },
 ]
 
 
@@ -455,7 +460,13 @@ def is_article_url(
                 low
             )
         )
-
+    if source == "Hürriyet":
+        return bool(
+            re.search(
+                r"/yazarlar/[^/?#]+-\d+(?:[/?#]|$)",
+                low
+            )
+        )
     return False
 
 
