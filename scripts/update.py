@@ -480,6 +480,114 @@ def discover_article_urls(
     found = []
     seen = set()
 
+    # CUMHURİYET:
+    # Önce yazar profillerini bul.
+    # Sonra her profilin içinden gerçek yazıları çıkar.
+    if source == "Cumhuriyet":
+
+        profiles = []
+        profile_seen = set()
+
+        for href in links:
+
+            full_url = urljoin(
+                page_url,
+                href
+            )
+
+            if domain not in full_url:
+                continue
+
+            path_match = re.search(
+                r'https?://(?:www\.)?cumhuriyet\.com\.tr/yazarlar/([^/?#]+)/?$',
+                full_url,
+                flags=re.I
+            )
+
+            if not path_match:
+                continue
+
+            if full_url in profile_seen:
+                continue
+
+            profile_seen.add(
+                full_url
+            )
+
+            profiles.append(
+                full_url
+            )
+
+        print(
+            "Cumhuriyet yazar profili:",
+            len(profiles)
+        )
+
+        # Aşırı istek oluşmasını önle.
+        profiles = profiles[:100]
+
+        for profile_url in profiles:
+
+            try:
+
+                profile_raw = get(
+                    profile_url
+                ).decode(
+                    "utf-8",
+                    errors="ignore"
+                )
+
+                profile_links = re.findall(
+                    r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>',
+                    profile_raw,
+                    flags=re.I | re.S
+                )
+
+                for href in profile_links:
+
+                    full_url = urljoin(
+                        profile_url,
+                        href
+                    )
+
+                    if domain not in full_url:
+                        continue
+
+                    if full_url in seen:
+                        continue
+
+                    # Cumhuriyet gerçek köşe yazıları:
+                    # /yazarlar/yazar-adi/yazi-basligi-1234567
+
+                    if not re.search(
+                        r'/yazarlar/[^/?#]+/[^/?#]+-\d+(?:[/?#]|$)',
+                        full_url,
+                        flags=re.I
+                    ):
+                        continue
+
+                    seen.add(
+                        full_url
+                    )
+
+                    found.append(
+                        full_url
+                    )
+
+            except Exception as error:
+
+                print(
+                    "Cumhuriyet profil atlandı:",
+                    profile_url,
+                    error
+                )
+
+        return found
+
+
+    # SÖZCÜ:
+    # Mevcut çalışan sistemi koru.
+
     for href in links:
 
         full_url = urljoin(
@@ -499,8 +607,13 @@ def discover_article_urls(
         ):
             continue
 
-        seen.add(full_url)
-        found.append(full_url)
+        seen.add(
+            full_url
+        )
+
+        found.append(
+            full_url
+        )
 
     return found
 
