@@ -16,10 +16,6 @@ TR = timezone(timedelta(hours=3))
 OUT = Path("data/articles.json")
 
 
-# =========================================================
-# KAYNAKLAR
-# =========================================================
-
 RSS_SOURCES = [
     (
         "Habertürk",
@@ -42,72 +38,29 @@ WEB_SOURCES = [
 ]
 
 
-# =========================================================
-# KATEGORİ KELİMELERİ
-# =========================================================
-
 ECON = (
-    "ekonomi",
-    "piyasa",
-    "borsa",
-    "bist",
-    "faiz",
-    "enflasyon",
-    "dolar",
-    "euro",
-    "döviz",
-    "banka",
-    "kredi",
-    "yatırım",
-    "vergi",
-    "ihracat",
-    "ithalat",
-    "şirket",
-    "sermaye",
-    "fon",
-    "bitcoin",
-    "kripto",
-    "altın",
-    "enerji",
-    "sanayi",
-    "ticaret",
-    "iş dünyası",
+    "ekonomi", "piyasa", "borsa", "bist",
+    "faiz", "enflasyon", "dolar", "euro",
+    "döviz", "banka", "kredi", "yatırım",
+    "vergi", "ihracat", "ithalat", "şirket",
+    "sermaye", "fon", "bitcoin", "kripto",
+    "altın", "enerji", "sanayi", "ticaret",
+    "iş dünyası"
 )
 
 
 POL = (
-    "siyaset",
-    "seçim",
-    "meclis",
-    "tbmm",
-    "bakan",
-    "başkan",
-    "parti",
-    "chp",
-    "ak parti",
-    "akp",
-    "mhp",
-    "dem",
-    "cumhurbaşkanı",
-    "erdoğan",
-    "diplomasi",
-    "anayasa",
-    "belediye",
-    "milletvekili",
-    "iktidar",
-    "muhalefet",
+    "siyaset", "seçim", "meclis", "tbmm",
+    "bakan", "başkan", "parti", "chp",
+    "ak parti", "akp", "mhp", "dem",
+    "cumhurbaşkanı", "erdoğan", "diplomasi",
+    "anayasa", "belediye", "milletvekili",
+    "iktidar", "muhalefet"
 )
 
 
-# =========================================================
-# TEMİZLEME
-# =========================================================
-
 def clean(value):
-
-    value = value or ""
-
-    value = unescape(value)
+    value = unescape(value or "")
 
     value = re.sub(
         r"<script.*?</script>",
@@ -129,90 +82,42 @@ def clean(value):
         value
     )
 
-    value = re.sub(
+    return re.sub(
         r"\s+",
         " ",
         value
-    )
+    ).strip()
 
-    return value.strip()
-
-
-# =========================================================
-# KATEGORİ
-# =========================================================
 
 def category(text):
-
     text = (text or "").casefold()
 
-    economy_score = sum(
+    e = sum(
         word in text
         for word in ECON
     )
 
-    politics_score = sum(
+    p = sum(
         word in text
         for word in POL
     )
 
-    if (
-        economy_score >
-        politics_score
-        and economy_score
-    ):
+    if e > p and e:
         return "Ekonomi"
 
-    if (
-        politics_score >
-        economy_score
-        and politics_score
-    ):
+    if p > e and p:
         return "Siyaset"
 
     return "Gündem"
 
 
-# =========================================================
-# TARİH
-# =========================================================
-
-def parse_date(raw):
-
-    try:
-
-        value = parsedate_to_datetime(
-            raw
-        )
-
-        if value.tzinfo is None:
-
-            value = value.replace(
-                tzinfo=timezone.utc
-            )
-
-        return value.astimezone(TR)
-
-    except Exception:
-
-        return None
-
-
-# =========================================================
-# HTTP
-# =========================================================
-
 def get(url):
-
     request = urllib.request.Request(
         url,
         headers={
             "User-Agent":
-            "Mozilla/5.0 "
-            "(Linux; Android 13) "
-            "AppleWebKit/537.36 "
-            "(KHTML, like Gecko) "
-            "Chrome/120 Safari/537.36",
+            "Mozilla/5.0 (Linux; Android 13) "
+            "AppleWebKit/537.36 Chrome/120 Safari/537.36",
 
             "Accept-Language":
             "tr-TR,tr;q=0.9,en;q=0.7",
@@ -223,13 +128,46 @@ def get(url):
         request,
         timeout=30
     ) as response:
-
         return response.read()
 
 
-# =========================================================
-# RSS
-# =========================================================
+def parse_rss_date(raw):
+    try:
+        value = parsedate_to_datetime(raw)
+
+        if value.tzinfo is None:
+            value = value.replace(
+                tzinfo=timezone.utc
+            )
+
+        return value.astimezone(TR)
+
+    except Exception:
+        return None
+
+
+def parse_iso_date(raw):
+    if not raw:
+        return None
+
+    try:
+        raw = raw.strip()
+
+        if raw.endswith("Z"):
+            raw = raw[:-1] + "+00:00"
+
+        value = datetime.fromisoformat(raw)
+
+        if value.tzinfo is None:
+            value = value.replace(
+                tzinfo=TR
+            )
+
+        return value.astimezone(TR)
+
+    except Exception:
+        return None
+
 
 def read_rss(
     source,
@@ -237,16 +175,13 @@ def read_rss(
     today,
     yesterday
 ):
-
     articles = []
 
     root = ET.fromstring(
         get(url)
     )
 
-    for item in root.findall(
-        ".//item"
-    ):
+    for item in root.findall(".//item"):
 
         title = clean(
             item.findtext("title")
@@ -257,9 +192,7 @@ def read_rss(
         )
 
         description = clean(
-            item.findtext(
-                "description"
-            )
+            item.findtext("description")
         )
 
         content = clean(
@@ -270,9 +203,7 @@ def read_rss(
 
         author = (
             clean(
-                item.findtext(
-                    "author"
-                )
+                item.findtext("author")
             )
             or
             clean(
@@ -282,21 +213,13 @@ def read_rss(
             )
         )
 
-        published = parse_date(
+        published = parse_rss_date(
             clean(
-                item.findtext(
-                    "pubDate"
-                )
+                item.findtext("pubDate")
             )
         )
 
-        if not title:
-            continue
-
-        if not link:
-            continue
-
-        if not published:
+        if not title or not link or not published:
             continue
 
         if published.date() not in (
@@ -307,78 +230,56 @@ def read_rss(
 
         speech_text = (
             content
-            if len(content) >
-            len(description)
+            if len(content) > len(description)
             else description
         )
 
-        speech_text = clean(
-            speech_text
-        )
+        articles.append({
+            "category":
+                category(
+                    title + " " + speech_text
+                ),
 
-        articles.append(
-            {
-                "category":
-                    category(
-                        title
-                        + " "
-                        + speech_text
-                    ),
+            "source":
+                source,
 
-                "source":
-                    source,
+            "author":
+                author or source + " Yazarı",
 
-                "author":
-                    author
-                    or source + " Yazarı",
+            "title":
+                title,
 
-                "title":
-                    title,
+            "summary":
+                speech_text,
 
-                "summary":
-                    speech_text,
+            "speechText":
+                speech_text,
 
-                "speechText":
-                    speech_text,
+            "url":
+                link,
 
-                "url":
-                    link,
+            "day":
+                "Bugün"
+                if published.date() == today
+                else "Dün",
 
-                "day":
-                    (
-                        "Bugün"
-                        if published.date()
-                        == today
-                        else "Dün"
-                    ),
-
-                "publishedAt":
-                    published.isoformat(),
-            }
-        )
+            "publishedAt":
+                published.isoformat(),
+        })
 
     return articles
 
-
-# =========================================================
-# META ETİKETİ BUL
-# =========================================================
 
 def find_meta(
     html,
     names
 ):
-
     for name in names:
 
         patterns = [
-
             rf'<meta[^>]+property=["\']{re.escape(name)}["\'][^>]+content=["\']([^"\']+)["\']',
-
             rf'<meta[^>]+name=["\']{re.escape(name)}["\'][^>]+content=["\']([^"\']+)["\']',
-
             rf'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']{re.escape(name)}["\']',
-
             rf'<meta[^>]+content=["\']([^"\']+)["\'][^>]+name=["\']{re.escape(name)}["\']',
         ]
 
@@ -391,7 +292,6 @@ def find_meta(
             )
 
             if match:
-
                 value = clean(
                     match.group(1)
                 )
@@ -401,10 +301,6 @@ def find_meta(
 
     return ""
 
-
-# =========================================================
-# JSON-LD ALANLARI
-# =========================================================
 
 def json_ld_values(html):
 
@@ -419,124 +315,106 @@ def json_ld_values(html):
         flags=re.I | re.S
     )
 
+    objects = []
+
     for block in blocks:
 
         try:
-
             data = json.loads(
                 unescape(block)
             )
 
         except Exception:
-
             continue
 
-        objects = (
-            data
-            if isinstance(data, list)
-            else [data]
-        )
+        if isinstance(data, list):
+            objects.extend(data)
 
-        for obj in objects:
+        elif isinstance(data, dict):
+            objects.append(data)
 
-            if not isinstance(
-                obj,
-                dict
-            ):
-                continue
+    index = 0
 
-            graph = obj.get(
-                "@graph"
+    while index < len(objects):
+
+        obj = objects[index]
+        index += 1
+
+        if not isinstance(obj, dict):
+            continue
+
+        graph = obj.get("@graph")
+
+        if isinstance(graph, list):
+            objects.extend(
+                x
+                for x in graph
+                if isinstance(x, dict)
             )
 
-            if isinstance(
-                graph,
-                list
-            ):
-                objects.extend(
-                    x
-                    for x in graph
-                    if isinstance(x, dict)
-                )
+        obj_type = obj.get("@type", "")
 
-            if not title:
+        if isinstance(obj_type, list):
+            obj_type = " ".join(obj_type)
 
-                title = clean(
-                    obj.get(
-                        "headline"
-                    )
-                    or obj.get(
-                        "name"
-                    )
+        is_article = any(
+            x in str(obj_type).lower()
+            for x in (
+                "article",
+                "newsarticle",
+                "reportagenewsarticle",
+                "opinionnewsarticle"
+            )
+        )
+
+        if not is_article:
+            continue
+
+        if not title:
+            title = clean(
+                obj.get("headline")
+                or obj.get("name")
+                or ""
+            )
+
+        if not description:
+            description = clean(
+                obj.get("description")
+                or ""
+            )
+
+        if not published:
+            published = clean(
+                obj.get("datePublished")
+                or ""
+            )
+
+        if not author:
+
+            value = obj.get("author")
+
+            if isinstance(value, dict):
+                author = clean(
+                    value.get("name")
                     or ""
                 )
 
-            if not description:
+            elif isinstance(value, list):
 
-                description = clean(
-                    obj.get(
-                        "description"
-                    )
-                    or ""
-                )
+                for person in value:
 
-            if not published:
+                    if isinstance(person, dict):
 
-                published = clean(
-                    obj.get(
-                        "datePublished"
-                    )
-                    or ""
-                )
-
-            if not author:
-
-                value = obj.get(
-                    "author"
-                )
-
-                if isinstance(
-                    value,
-                    dict
-                ):
-
-                    author = clean(
-                        value.get(
-                            "name"
+                        author = clean(
+                            person.get("name")
+                            or ""
                         )
-                        or ""
-                    )
 
-                elif isinstance(
-                    value,
-                    list
-                ):
+                        if author:
+                            break
 
-                    for person in value:
-
-                        if isinstance(
-                            person,
-                            dict
-                        ):
-
-                            author = clean(
-                                person.get(
-                                    "name"
-                                )
-                                or ""
-                            )
-
-                            if author:
-                                break
-
-                elif isinstance(
-                    value,
-                    str
-                ):
-
-                    author = clean(
-                        value
-                    )
+            elif isinstance(value, str):
+                author = clean(value)
 
     return (
         title,
@@ -546,116 +424,46 @@ def json_ld_values(html):
     )
 
 
-# =========================================================
-# ISO TARİH
-# =========================================================
-
-def parse_iso_date(raw):
-
-    if not raw:
-        return None
-
-    try:
-
-        value = raw.strip()
-
-        if value.endswith("Z"):
-
-            value = (
-                value[:-1]
-                + "+00:00"
-            )
-
-        result = datetime.fromisoformat(
-            value
-        )
-
-        if result.tzinfo is None:
-
-            result = result.replace(
-                tzinfo=TR
-            )
-
-        return result.astimezone(TR)
-
-    except Exception:
-
-        return None
-
-
-# =========================================================
-# GERÇEK YAZI BAĞLANTISI MI?
-# =========================================================
-
 def is_article_url(
     source,
     url
 ):
-
     low = url.lower()
-
-    # Profil/listeler kesinlikle alınmasın.
-
-    blocked = (
-        "/yazarlar",
-        "/yazar/",
-        "/authors",
-        "/author/",
-        "/kategori/",
-        "/arama",
-        "/etiket/",
-    )
-
-    if any(
-        item in low
-        for item in blocked
-    ):
-
-        # Cumhuriyet'te gerçek yazı yolu
-        # /koseyazisi/ olabilir.
-        if (
-            source == "Cumhuriyet"
-            and "/koseyazisi/" in low
-        ):
-            return True
-
-        return False
-
 
     if source == "Cumhuriyet":
 
-        return (
-            "/koseyazisi/" in low
-            or
-            "/yazi/" in low
-        )
+        # Profil:
+        # /yazarlar/emre-kongar
+        #
+        # Gerçek yazı:
+        # /yazarlar/mustafa-balbay/bu-kriz-iz-birakir-2541926
 
+        return bool(
+            re.search(
+                r"/yazarlar/[^/]+/[^/?#]+-\d+(?:[/?#]|$)",
+                low
+            )
+        )
 
     if source == "Sözcü":
 
-        # Sözcü'de gerçek içerik
-        # bağlantılarının profil
-        # bağlantılarından ayrılması.
-        return (
-            "-p" in low
-            or
-            "/kose-yazisi/" in low
+        # Sözcü gerçek yazıları genellikle
+        # sonlarında -p123456 benzeri kimlik taşır.
+        return bool(
+            re.search(
+                r"-p\d+(?:[/?#]|$)",
+                low
+            )
         )
-
 
     return False
 
-
-# =========================================================
-# YAZAR SAYFASINDAN ADAY URL BUL
-# =========================================================
 
 def discover_article_urls(
     source,
     page_url,
     domain
 ):
-
     raw = get(
         page_url
     ).decode(
@@ -670,7 +478,6 @@ def discover_article_urls(
     )
 
     found = []
-
     seen = set()
 
     for href in links:
@@ -692,20 +499,11 @@ def discover_article_urls(
         ):
             continue
 
-        seen.add(
-            full_url
-        )
-
-        found.append(
-            full_url
-        )
+        seen.add(full_url)
+        found.append(full_url)
 
     return found
 
-
-# =========================================================
-# GERÇEK MAKALE SAYFASINI OKU
-# =========================================================
 
 def read_article_page(
     source,
@@ -713,7 +511,6 @@ def read_article_page(
     today,
     yesterday
 ):
-
     raw = get(
         url
     ).decode(
@@ -726,9 +523,7 @@ def read_article_page(
         ld_author,
         ld_description,
         ld_published
-    ) = json_ld_values(
-        raw
-    )
+    ) = json_ld_values(raw)
 
 
     title = (
@@ -737,7 +532,7 @@ def read_article_page(
             raw,
             (
                 "og:title",
-                "twitter:title",
+                "twitter:title"
             )
         )
     )
@@ -750,7 +545,7 @@ def read_article_page(
             (
                 "og:description",
                 "description",
-                "twitter:description",
+                "twitter:description"
             )
         )
     )
@@ -762,7 +557,7 @@ def read_article_page(
             raw,
             (
                 "author",
-                "article:author",
+                "article:author"
             )
         )
     )
@@ -774,7 +569,7 @@ def read_article_page(
             raw,
             (
                 "article:published_time",
-                "datePublished",
+                "datePublished"
             )
         )
     )
@@ -785,8 +580,21 @@ def read_article_page(
     )
 
 
-    # Tarihi doğrulanamayan içeriği
-    # "bugün" diye uydurma.
+    # Bazı sayfalarda JSON-LD tarihi yoksa
+    # HTML içindeki YYYY-MM-DD tarihini dene.
+
+    if not published:
+
+        match = re.search(
+            r'20\d{2}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?(?:Z|[+-]\d{2}:\d{2})?',
+            raw
+        )
+
+        if match:
+            published = parse_iso_date(
+                match.group(0)
+            )
+
 
     if not published:
         return None
@@ -799,31 +607,18 @@ def read_article_page(
         return None
 
 
-    title = clean(
-        title
-    )
-
-    author = clean(
-        author
-    )
-
-    description = clean(
-        description
-    )
+    title = clean(title)
+    author = clean(author)
+    description = clean(description)
 
 
     if not title:
         return None
 
 
-    # Yazar profilinin yanlışlıkla
-    # makale olarak girmesine karşı
-    # ikinci güvenlik kontrolü.
-
-    if (
+    if author and (
         title.casefold()
         == author.casefold()
-        and author
     ):
         return None
 
@@ -856,21 +651,14 @@ def read_article_page(
             url,
 
         "day":
-            (
-                "Bugün"
-                if published.date()
-                == today
-                else "Dün"
-            ),
+            "Bugün"
+            if published.date() == today
+            else "Dün",
 
         "publishedAt":
             published.isoformat(),
     }
 
-
-# =========================================================
-# WEB KAYNAĞINI OKU
-# =========================================================
 
 def read_web_source(
     source,
@@ -879,7 +667,6 @@ def read_web_source(
     today,
     yesterday
 ):
-
     articles = []
 
     urls = discover_article_urls(
@@ -888,13 +675,13 @@ def read_web_source(
         domain
     )
 
+    print(
+        source,
+        "aday yazı bağlantısı:",
+        len(urls)
+    )
 
-    # Güvenlik:
-    # yanlış bir sayfa yüzlerce URL
-    # üretirse sınırsız istek yapma.
-
-    urls = urls[:80]
-
+    urls = urls[:100]
 
     for article_url in urls:
 
@@ -908,10 +695,7 @@ def read_web_source(
             )
 
             if article:
-
-                articles.append(
-                    article
-                )
+                articles.append(article)
 
         except Exception as error:
 
@@ -925,10 +709,6 @@ def read_web_source(
     return articles
 
 
-# =========================================================
-# ANA PROGRAM
-# =========================================================
-
 def main():
 
     now = datetime.now(TR)
@@ -940,15 +720,11 @@ def main():
         - timedelta(days=1)
     )
 
-
     rows = []
-
     seen = set()
 
 
-    # -----------------------------------------------------
-    # RSS
-    # -----------------------------------------------------
+    # HABERTÜRK RSS
 
     for source, url in RSS_SOURCES:
 
@@ -963,18 +739,14 @@ def main():
 
             for article in results:
 
-                key = article["url"]
-
-                if key in seen:
+                if article["url"] in seen:
                     continue
 
                 seen.add(
-                    key
+                    article["url"]
                 )
 
-                rows.append(
-                    article
-                )
+                rows.append(article)
 
         except Exception as error:
 
@@ -985,42 +757,32 @@ def main():
             )
 
 
-    # -----------------------------------------------------
-    # WEB
-    # -----------------------------------------------------
+    # SÖZCÜ + CUMHURİYET
 
     for item in WEB_SOURCES:
 
         source = item["name"]
 
-        url = item["url"]
-
-        domain = item["domain"]
-
         try:
 
             results = read_web_source(
                 source,
-                url,
-                domain,
+                item["url"],
+                item["domain"],
                 today,
                 yesterday
             )
 
             for article in results:
 
-                key = article["url"]
-
-                if key in seen:
+                if article["url"] in seen:
                     continue
 
                 seen.add(
-                    key
+                    article["url"]
                 )
 
-                rows.append(
-                    article
-                )
+                rows.append(article)
 
         except Exception as error:
 
@@ -1031,20 +793,12 @@ def main():
             )
 
 
-    # -----------------------------------------------------
-    # SIRALA
-    # -----------------------------------------------------
-
     rows.sort(
         key=lambda item:
         item["publishedAt"],
         reverse=True
     )
 
-
-    # -----------------------------------------------------
-    # KAYDET
-    # -----------------------------------------------------
 
     OUT.parent.mkdir(
         parents=True,
@@ -1062,36 +816,25 @@ def main():
     )
 
 
-    # -----------------------------------------------------
-    # RAPOR
-    # -----------------------------------------------------
-
     counts = {}
 
     for article in rows:
 
-        source = article[
-            "source"
-        ]
+        source = article["source"]
 
         counts[source] = (
-            counts.get(
-                source,
-                0
-            )
+            counts.get(source, 0)
             + 1
         )
 
 
     print(
         len(rows),
-        "gerçek yazı kaydedildi"
+        "yazı kaydedildi"
     )
 
 
-    for source in sorted(
-        counts
-    ):
+    for source in sorted(counts):
 
         print(
             source,
