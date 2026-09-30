@@ -980,6 +980,111 @@ def main():
     )
 
     rows = []
+    collectors = [
+        ("Habertürk", collect_haberturk),
+        ("Sözcü", collect_sozcu),
+        ("Cumhuriyet", collect_cumhuriyet),
+        ("Ekonomist", collect_ekonomist),
+        ("Capital", collect_capital),
+    ]
+
+    for source_name, collector in collectors:
+        try:
+            source_rows = collector(
+                today,
+                yesterday
+            )
+
+            rows.extend(
+                source_rows
+            )
+
+        except Exception as error:
+            print(
+                source_name,
+                "hata:",
+                error
+            )
+
+    # Aynı bağlantının iki kez kaydedilmesini önle.
+    final_rows = []
+    seen = set()
+
+    for article in rows:
+
+        url = article.get(
+            "url",
+            ""
+        )
+
+        if not url:
+            continue
+
+        if url in seen:
+            continue
+
+        seen.add(url)
+
+        final_rows.append(
+            article
+        )
+
+    # En yeni yazılar üstte.
+    final_rows.sort(
+        key=lambda item:
+            item.get(
+                "publishedAt",
+                ""
+            ),
+        reverse=True
+    )
+
+    # data klasörü yoksa oluştur.
+    OUT.parent.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+    # Sonuçları articles.json dosyasına yaz.
+    OUT.write_text(
+        json.dumps(
+            final_rows,
+            ensure_ascii=False,
+            indent=2
+        ),
+        encoding="utf-8"
+    )
+
+    # Kontrol çıktıları.
+    print(
+        "TOPLAM:",
+        len(final_rows)
+    )
+
+    counts = {}
+
+    for article in final_rows:
+
+        source = article.get(
+            "source",
+            "Bilinmeyen"
+        )
+
+        counts[source] = (
+            counts.get(source, 0)
+            + 1
+        )
+
+    for source in sorted(counts):
+
+        print(
+            source,
+            ":",
+            counts[source]
+        )
 
 
-    collectors
+if __name__ == "__main__":
+    main()
+
+    
