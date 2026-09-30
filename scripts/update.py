@@ -35,16 +35,6 @@ WEB_SOURCES = [
         "url": "https://www.cumhuriyet.com.tr/yazarlar",
         "domain": "cumhuriyet.com.tr",
     },
-    {
-        "name": "Hürriyet",
-        "url": "https://www.hurriyet.com.tr/yazarlar/",
-        "domain": "hurriyet.com.tr",
-    },
-        {
-        "name": "Forbes Türkiye",
-        "url": "https://www.forbes.com.tr/yazarlar",
-        "domain": "forbes.com.tr",
-    },
 ]
 
 
@@ -212,9 +202,7 @@ def read_rss(
         )
 
         author = (
-            clean(
-                item.findtext("author")
-            )
+            clean(item.findtext("author"))
             or
             clean(
                 item.findtext(
@@ -280,10 +268,8 @@ def read_rss(
     return articles
 
 
-def find_meta(
-    html,
-    names
-):
+def find_meta(html, names):
+
     for name in names:
 
         patterns = [
@@ -302,6 +288,7 @@ def find_meta(
             )
 
             if match:
+
                 value = clean(
                     match.group(1)
                 )
@@ -404,6 +391,7 @@ def json_ld_values(html):
             value = obj.get("author")
 
             if isinstance(value, dict):
+
                 author = clean(
                     value.get("name")
                     or ""
@@ -424,6 +412,7 @@ def json_ld_values(html):
                             break
 
             elif isinstance(value, str):
+
                 author = clean(value)
 
     return (
@@ -434,49 +423,17 @@ def json_ld_values(html):
     )
 
 
-def is_article_url(
-    source,
-    url
-):
-    low = url.lower()
+def is_sozcu_article(url):
 
-    if source == "Cumhuriyet":
-
-        # Profil:
-        # /yazarlar/emre-kongar
-        #
-        # Gerçek yazı:
-        # /yazarlar/mustafa-balbay/bu-kriz-iz-birakir-2541926
-
-        return bool(
-            re.search(
-                r"/yazarlar/[^/]+/[^/?#]+-\d+(?:[/?#]|$)",
-                low
-            )
+    return bool(
+        re.search(
+            r"-p\d+(?:[/?#]|$)",
+            url.lower()
         )
-
-    if source == "Sözcü":
-
-        # Sözcü gerçek yazıları genellikle
-        # sonlarında -p123456 benzeri kimlik taşır.
-        return bool(
-            re.search(
-                r"-p\d+(?:[/?#]|$)",
-                low
-            )
-        )
-    if source == "Hürriyet":
-        return bool(
-            re.search(
-                r"/yazarlar/[^/?#]+-\d+(?:[/?#]|$)",
-                low
-            )
-        )
-    return False
+    )
 
 
-def discover_article_urls(
-    source,
+def discover_sozcu(
     page_url,
     domain
 ):
@@ -496,238 +453,6 @@ def discover_article_urls(
     found = []
     seen = set()
 
-    # CUMHURİYET:
-    # Önce yazar profillerini bul.
-    # Sonra her profilin içinden gerçek yazıları çıkar.
-    if source == "Cumhuriyet":
-
-        profiles = []
-        profile_seen = set()
-
-        for href in links:
-
-            full_url = urljoin(
-                page_url,
-                href
-            )
-
-            if domain not in full_url:
-                continue
-
-            path_match = re.search(
-                r'https?://(?:www\.)?cumhuriyet\.com\.tr/yazarlar/([^/?#]+)/?$',
-                full_url,
-                flags=re.I
-            )
-
-            if not path_match:
-                continue
-
-            if full_url in profile_seen:
-                continue
-
-            profile_seen.add(
-                full_url
-            )
-
-            profiles.append(
-                full_url
-            )
-
-        print(
-            "Cumhuriyet yazar profili:",
-            len(profiles)
-        )
-
-        # Aşırı istek oluşmasını önle.
-        profiles = profiles[:100]
-
-        for profile_url in profiles:
-
-            try:
-
-                profile_raw = get(
-                    profile_url
-                ).decode(
-                    "utf-8",
-                    errors="ignore"
-                )
-
-                profile_links = re.findall(
-                    r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>',
-                    profile_raw,
-                    flags=re.I | re.S
-                )
-
-                for href in profile_links:
-
-                    full_url = urljoin(
-                        profile_url,
-                        href
-                    )
-
-                    if domain not in full_url:
-                        continue
-
-                    if full_url in seen:
-                        continue
-
-                    # Cumhuriyet gerçek köşe yazıları:
-                    # /yazarlar/yazar-adi/yazi-basligi-1234567
-
-                    if not re.search(
-                        r'/yazarlar/[^/?#]+/[^/?#]+-\d+(?:[/?#]|$)',
-                        full_url,
-                        flags=re.I
-                    ):
-                        continue
-
-                    seen.add(
-                        full_url
-                    )
-
-                    found.append(
-                        full_url
-                    )
-
-            except Exception as error:
-
-                print(
-                    "Cumhuriyet profil atlandı:",
-                    profile_url,
-                    error
-                )
-
-        return found
-
-    # FORBES TÜRKİYE:
-    # Önce /yazar/... profil bağlantılarını bul.
-    # Ardından profillerdeki gerçek makale bağlantılarını topla.
-
-    if source == "Forbes Türkiye":
-
-        profiles = []
-        profile_seen = set()
-
-        for href in links:
-
-            profile_url = urljoin(
-                page_url,
-                href
-            )
-
-            if domain not in profile_url:
-                continue
-
-            if not re.search(
-                r'https?://(?:www\.)?forbes\.com\.tr/yazar/[^/?#]+/?$',
-                profile_url,
-                flags=re.I
-            ):
-                continue
-
-            if profile_url in profile_seen:
-                continue
-
-            profile_seen.add(
-                profile_url
-            )
-
-            profiles.append(
-                profile_url
-            )
-
-        print(
-            "Forbes Türkiye yazar profili:",
-            len(profiles)
-        )
-
-        profiles = profiles[:100]
-
-        for profile_url in profiles:
-
-            try:
-
-                profile_raw = get(
-                    profile_url
-                ).decode(
-                    "utf-8",
-                    errors="ignore"
-                )
-
-                profile_links = re.findall(
-                    r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>',
-                    profile_raw,
-                    flags=re.I | re.S
-                )
-
-                for href in profile_links:
-
-                    article_url = urljoin(
-                        profile_url,
-                        href
-                    )
-
-                    if domain not in article_url:
-                        continue
-
-                    if article_url in seen:
-                        continue
-
-                    # Yazar profilinin kendisini alma.
-                    if re.search(
-                        r'/yazar/[^/?#]+/?$',
-                        article_url,
-                        flags=re.I
-                    ):
-                        continue
-
-                    # Forbes içerik sayfası olabilecek
-                    # bağlantıları al.
-                    if not re.search(
-                        r'forbes\.com\.tr/[^?#]+',
-                        article_url,
-                        flags=re.I
-                    ):
-                        continue
-
-                    # Menü, kategori ve genel sayfaları ele.
-                    blocked = (
-                        "/yazar/",
-                        "/kategori/",
-                        "/etiket/",
-                        "/arama",
-                        "/iletisim",
-                        "/hakkimizda",
-                        "/kunye",
-                    )
-
-                    if any(
-                        item in article_url.lower()
-                        for item in blocked
-                    ):
-                        continue
-
-                    seen.add(
-                        article_url
-                    )
-
-                    found.append(
-                        article_url
-                    )
-
-            except Exception as error:
-
-                print(
-                    "Forbes Türkiye profil atlandı:",
-                    profile_url,
-                    error
-                )
-
-        return found
-    # SÖZCÜ:
-    # Mevcut çalışan sistemi koru.
-
     for href in links:
 
         full_url = urljoin(
@@ -741,19 +466,137 @@ def discover_article_urls(
         if full_url in seen:
             continue
 
-        if not is_article_url(
-            source,
+        if not is_sozcu_article(
             full_url
         ):
             continue
 
-        seen.add(
-            full_url
+        seen.add(full_url)
+        found.append(full_url)
+
+    print(
+        "Sözcü aday yazı bağlantısı:",
+        len(found)
+    )
+
+    return found
+
+
+def discover_cumhuriyet(
+    page_url,
+    domain
+):
+    raw = get(
+        page_url
+    ).decode(
+        "utf-8",
+        errors="ignore"
+    )
+
+    links = re.findall(
+        r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>',
+        raw,
+        flags=re.I | re.S
+    )
+
+    profiles = []
+    profile_seen = set()
+
+    for href in links:
+
+        profile_url = urljoin(
+            page_url,
+            href
         )
 
-        found.append(
-            full_url
+        if domain not in profile_url:
+            continue
+
+        if not re.search(
+            r'https?://(?:www\.)?cumhuriyet\.com\.tr/yazarlar/([^/?#]+)/?$',
+            profile_url,
+            flags=re.I
+        ):
+            continue
+
+        if profile_url in profile_seen:
+            continue
+
+        profile_seen.add(
+            profile_url
         )
+
+        profiles.append(
+            profile_url
+        )
+
+    print(
+        "Cumhuriyet yazar profili:",
+        len(profiles)
+    )
+
+    found = []
+    seen = set()
+
+    profiles = profiles[:100]
+
+    for profile_url in profiles:
+
+        try:
+
+            profile_raw = get(
+                profile_url
+            ).decode(
+                "utf-8",
+                errors="ignore"
+            )
+
+            profile_links = re.findall(
+                r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>',
+                profile_raw,
+                flags=re.I | re.S
+            )
+
+            for href in profile_links:
+
+                full_url = urljoin(
+                    profile_url,
+                    href
+                )
+
+                if domain not in full_url:
+                    continue
+
+                if full_url in seen:
+                    continue
+
+                if not re.search(
+                    r'/yazarlar/[^/?#]+/[^/?#]+-\d+(?:[/?#]|$)',
+                    full_url,
+                    flags=re.I
+                ):
+                    continue
+
+                seen.add(
+                    full_url
+                )
+
+                found.append(
+                    full_url
+                )
+
+        except Exception as error:
+
+            print(
+                "Cumhuriyet profil atlandı:",
+                profile_url,
+                error
+            )
+
+    print(
+        "Cumhuriyet aday yazı bağlantısı:",
+        len(found)
+    )
 
     return found
 
@@ -833,9 +676,6 @@ def read_article_page(
     )
 
 
-    # Bazı sayfalarda JSON-LD tarihi yoksa
-    # HTML içindeki YYYY-MM-DD tarihini dene.
-
     if not published:
 
         match = re.search(
@@ -844,6 +684,7 @@ def read_article_page(
         )
 
         if match:
+
             published = parse_iso_date(
                 match.group(0)
             )
@@ -869,8 +710,9 @@ def read_article_page(
         return None
 
 
-    if author and (
-        title.casefold()
+    if (
+        author
+        and title.casefold()
         == author.casefold()
     ):
         return None
@@ -920,21 +762,28 @@ def read_web_source(
     today,
     yesterday
 ):
+
+    if source == "Sözcü":
+
+        urls = discover_sozcu(
+            url,
+            domain
+        )
+
+    elif source == "Cumhuriyet":
+
+        urls = discover_cumhuriyet(
+            url,
+            domain
+        )
+
+    else:
+
+        urls = []
+
+
     articles = []
 
-    urls = discover_article_urls(
-        source,
-        url,
-        domain
-    )
-
-    print(
-        source,
-        "aday yazı bağlantısı:",
-        len(urls)
-    )
-
-    urls = urls[:100]
 
     for article_url in urls:
 
@@ -948,7 +797,9 @@ def read_web_source(
             )
 
             if article:
-                articles.append(article)
+                articles.append(
+                    article
+                )
 
         except Exception as error:
 
@@ -958,6 +809,7 @@ def read_web_source(
                 article_url,
                 error
             )
+
 
     return articles
 
@@ -973,11 +825,12 @@ def main():
         - timedelta(days=1)
     )
 
+
     rows = []
     seen = set()
 
 
-    # HABERTÜRK RSS
+    # HABERTÜRK
 
     for source, url in RSS_SOURCES:
 
@@ -999,7 +852,9 @@ def main():
                     article["url"]
                 )
 
-                rows.append(article)
+                rows.append(
+                    article
+                )
 
         except Exception as error:
 
@@ -1035,7 +890,9 @@ def main():
                     article["url"]
                 )
 
-                rows.append(article)
+                rows.append(
+                    article
+                )
 
         except Exception as error:
 
