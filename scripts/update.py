@@ -15,7 +15,7 @@ from urllib.parse import urljoin
 TR = timezone(timedelta(hours=3))
 OUT = Path("data/articles.json")
 
-HTTP_TIMEOUT = 6
+TIMEOUT = 6
 
 HEADERS = {
     "User-Agent": (
@@ -35,7 +35,7 @@ ECON = (
     "vergi", "ihracat", "ithalat", "şirket",
     "sermaye", "fon", "bitcoin", "kripto",
     "altın", "enerji", "sanayi", "ticaret",
-    "iş dünyası",
+    "iş dünyası", "girişim", "finans",
 )
 
 POL = (
@@ -56,7 +56,7 @@ def get_bytes(url):
 
     with urllib.request.urlopen(
         req,
-        timeout=HTTP_TIMEOUT
+        timeout=TIMEOUT
     ) as response:
         return response.read()
 
@@ -101,20 +101,20 @@ def clean(value):
 def classify(text):
     text = (text or "").casefold()
 
-    economy = sum(
+    e = sum(
         word in text
         for word in ECON
     )
 
-    politics = sum(
+    p = sum(
         word in text
         for word in POL
     )
 
-    if economy > politics and economy:
+    if e > p and e:
         return "Ekonomi"
 
-    if politics > economy and politics:
+    if p > e and p:
         return "Siyaset"
 
     return "Gündem"
@@ -131,7 +131,10 @@ def extract_links(html, base_url):
     seen = set()
 
     for href in hrefs:
-        url = urljoin(base_url, href)
+        url = urljoin(
+            base_url,
+            href
+        )
 
         if url in seen:
             continue
@@ -146,16 +149,20 @@ def parse_iso(raw):
     if not raw:
         return None
 
-    raw = raw.strip()
-
     try:
+        raw = raw.strip()
+
         if raw.endswith("Z"):
             raw = raw[:-1] + "+00:00"
 
-        value = datetime.fromisoformat(raw)
+        value = datetime.fromisoformat(
+            raw
+        )
 
         if value.tzinfo is None:
-            value = value.replace(tzinfo=TR)
+            value = value.replace(
+                tzinfo=TR
+            )
 
         return value.astimezone(TR)
 
@@ -165,6 +172,7 @@ def parse_iso(raw):
 
 def meta_value(html, keys):
     for key in keys:
+
         patterns = (
             rf'<meta[^>]+property=["\']{re.escape(key)}["\'][^>]+content=["\']([^"\']+)["\']',
             rf'<meta[^>]+name=["\']{re.escape(key)}["\'][^>]+content=["\']([^"\']+)["\']',
@@ -173,6 +181,7 @@ def meta_value(html, keys):
         )
 
         for pattern in patterns:
+
             match = re.search(
                 pattern,
                 html,
@@ -180,7 +189,10 @@ def meta_value(html, keys):
             )
 
             if match:
-                value = clean(match.group(1))
+
+                value = clean(
+                    match.group(1)
+                )
 
                 if value:
                     return value
@@ -205,10 +217,12 @@ def jsonld_article(html):
     queue = []
 
     for block in blocks:
+
         try:
             data = json.loads(
                 unescape(block)
             )
+
         except Exception:
             continue
 
@@ -221,6 +235,7 @@ def jsonld_article(html):
     i = 0
 
     while i < len(queue):
+
         obj = queue[i]
         i += 1
 
@@ -230,17 +245,26 @@ def jsonld_article(html):
         graph = obj.get("@graph")
 
         if isinstance(graph, list):
+
             queue.extend(
-                x for x in graph
+                x
+                for x in graph
                 if isinstance(x, dict)
             )
 
-        obj_type = obj.get("@type", "")
+        obj_type = obj.get(
+            "@type",
+            ""
+        )
 
         if isinstance(obj_type, list):
-            obj_type = " ".join(obj_type)
+            obj_type = " ".join(
+                obj_type
+            )
 
-        if "article" not in str(obj_type).lower():
+        if "article" not in str(
+            obj_type
+        ).lower():
             continue
 
         if not result["title"]:
@@ -263,17 +287,27 @@ def jsonld_article(html):
             )
 
         if not result["author"]:
-            author = obj.get("author")
+
+            author = obj.get(
+                "author"
+            )
 
             if isinstance(author, dict):
+
                 result["author"] = clean(
                     author.get("name")
                     or ""
                 )
 
             elif isinstance(author, list):
+
                 for person in author:
-                    if isinstance(person, dict):
+
+                    if isinstance(
+                        person,
+                        dict
+                    ):
+
                         name = clean(
                             person.get("name")
                             or ""
@@ -284,7 +318,10 @@ def jsonld_article(html):
                             break
 
             elif isinstance(author, str):
-                result["author"] = clean(author)
+
+                result["author"] = clean(
+                    author
+                )
 
     return result
 
@@ -303,7 +340,10 @@ def read_article(
         ld["title"]
         or meta_value(
             html,
-            ("og:title", "twitter:title")
+            (
+                "og:title",
+                "twitter:title"
+            )
         )
     )
 
@@ -314,7 +354,7 @@ def read_article(
             (
                 "og:description",
                 "description",
-                "twitter:description",
+                "twitter:description"
             )
         )
     )
@@ -323,24 +363,30 @@ def read_article(
         ld["author"]
         or meta_value(
             html,
-            ("author", "article:author")
+            (
+                "author",
+                "article:author"
+            )
         )
     )
 
-    date_raw = (
+    raw_date = (
         ld["date"]
         or meta_value(
             html,
             (
                 "article:published_time",
-                "datePublished",
+                "datePublished"
             )
         )
     )
 
-    published = parse_iso(date_raw)
+    published = parse_iso(
+        raw_date
+    )
 
     if not published:
+
         match = re.search(
             r'20\d{2}-\d{2}-\d{2}T'
             r'\d{2}:\d{2}'
@@ -350,6 +396,7 @@ def read_article(
         )
 
         if match:
+
             published = parse_iso(
                 match.group(0)
             )
@@ -364,38 +411,97 @@ def read_article(
         return None
 
     title = clean(title)
-    description = clean(description)
     author = clean(author)
+    description = clean(
+        description
+    )
 
     if not title:
         return None
 
     return {
-        "category": classify(
-            title + " " + description
-        ),
-        "source": source,
-        "author": (
+        "category":
+            classify(
+                title
+                + " "
+                + description
+            ),
+
+        "source":
+            source,
+
+        "author":
             author
-            or source + " Yazarı"
-        ),
-        "title": title,
-        "summary": description,
-        "speechText": description,
-        "url": url,
-        "day": (
+            or source + " Yazarı",
+
+        "title":
+            title,
+
+        "summary":
+            description,
+
+        "speechText":
+            description,
+
+        "url":
+            url,
+
+        "day":
             "Bugün"
             if published.date() == today
-            else "Dün"
-        ),
+            else "Dün",
+
         "publishedAt":
             published.isoformat(),
     }
 
 
-# -------------------------------------------------
+def collect_urls(
+    source,
+    urls,
+    today,
+    yesterday,
+    limit=40
+):
+    rows = []
+    seen = set()
+
+    for url in urls[:limit]:
+
+        if url in seen:
+            continue
+
+        seen.add(url)
+
+        try:
+
+            article = read_article(
+                source,
+                url,
+                today,
+                yesterday
+            )
+
+            if article:
+                rows.append(
+                    article
+                )
+
+        except Exception:
+            continue
+
+    print(
+        source,
+        ":",
+        len(rows)
+    )
+
+    return rows
+
+
+# ================================================
 # HABERTÜRK
-# -------------------------------------------------
+# ================================================
 
 def collect_haberturk(
     today,
@@ -412,7 +518,10 @@ def collect_haberturk(
 
     rows = []
 
-    for item in root.findall(".//item"):
+    for item in root.findall(
+        ".//item"
+    ):
+
         title = clean(
             item.findtext("title")
         )
@@ -422,7 +531,9 @@ def collect_haberturk(
         )
 
         description = clean(
-            item.findtext("description")
+            item.findtext(
+                "description"
+            )
         )
 
         content = clean(
@@ -433,8 +544,11 @@ def collect_haberturk(
         )
 
         author = (
-            clean(item.findtext("author"))
-            or clean(
+            clean(
+                item.findtext("author")
+            )
+            or
+            clean(
                 item.findtext(
                     "{http://purl.org/dc/"
                     "elements/1.1/}creator"
@@ -447,6 +561,7 @@ def collect_haberturk(
         )
 
         try:
+
             published = (
                 parsedate_to_datetime(
                     raw_date
@@ -454,8 +569,11 @@ def collect_haberturk(
             )
 
             if published.tzinfo is None:
-                published = published.replace(
-                    tzinfo=timezone.utc
+
+                published = (
+                    published.replace(
+                        tzinfo=timezone.utc
+                    )
                 )
 
             published = (
@@ -473,19 +591,23 @@ def collect_haberturk(
 
         text = (
             content
-            if len(content) > len(description)
+            if len(content)
+            > len(description)
             else description
         )
 
         rows.append({
             "category":
-                classify(title + " " + text),
+                classify(
+                    title + " " + text
+                ),
 
             "source":
                 "Habertürk",
 
             "author":
-                author or "Habertürk Yazarı",
+                author
+                or "Habertürk Yazarı",
 
             "title":
                 title,
@@ -501,7 +623,8 @@ def collect_haberturk(
 
             "day":
                 "Bugün"
-                if published.date() == today
+                if published.date()
+                == today
                 else "Dün",
 
             "publishedAt":
@@ -516,9 +639,9 @@ def collect_haberturk(
     return rows
 
 
-# -------------------------------------------------
+# ================================================
 # SÖZCÜ
-# -------------------------------------------------
+# ================================================
 
 def collect_sozcu(
     today,
@@ -539,6 +662,7 @@ def collect_sozcu(
     seen = set()
 
     for url in links:
+
         if "sozcu.com.tr" not in url:
             continue
 
@@ -554,43 +678,23 @@ def collect_sozcu(
         seen.add(url)
         candidates.append(url)
 
-    # Ana yazar sayfasındaki ilk 40 aday
-    # bugünkü/dünkü yazılar için yeterli.
-    candidates = candidates[:40]
-
     print(
         "Sözcü aday:",
         len(candidates)
     )
 
-    rows = []
-
-    for url in candidates:
-        try:
-            article = read_article(
-                "Sözcü",
-                url,
-                today,
-                yesterday
-            )
-
-            if article:
-                rows.append(article)
-
-        except Exception:
-            continue
-
-    print(
-        "Sözcü:",
-        len(rows)
+    return collect_urls(
+        "Sözcü",
+        candidates,
+        today,
+        yesterday,
+        40
     )
 
-    return rows
 
-
-# -------------------------------------------------
+# ================================================
 # CUMHURİYET
-# -------------------------------------------------
+# ================================================
 
 def collect_cumhuriyet(
     today,
@@ -609,7 +713,7 @@ def collect_cumhuriyet(
     )
 
     profiles = []
-    seen_profiles = set()
+    profile_seen = set()
 
     for url in links:
 
@@ -622,10 +726,10 @@ def collect_cumhuriyet(
         ):
             continue
 
-        if url in seen_profiles:
+        if url in profile_seen:
             continue
 
-        seen_profiles.add(url)
+        profile_seen.add(url)
         profiles.append(url)
 
     print(
@@ -634,13 +738,15 @@ def collect_cumhuriyet(
     )
 
     candidates = []
-    seen_articles = set()
+    article_seen = set()
 
-    # Her profilden yalnızca ilk 2
-    # gerçek köşe yazısını al.
     for profile in profiles:
 
+        if len(candidates) >= 60:
+            break
+
         try:
+
             profile_html = get_html(
                 profile
             )
@@ -657,7 +763,7 @@ def collect_cumhuriyet(
 
         for url in profile_links:
 
-            if url in seen_articles:
+            if url in article_seen:
                 continue
 
             if not re.search(
@@ -670,7 +776,8 @@ def collect_cumhuriyet(
             ):
                 continue
 
-            seen_articles.add(url)
+            article_seen.add(url)
+
             candidates.append(url)
 
             author_count += 1
@@ -678,48 +785,188 @@ def collect_cumhuriyet(
             if author_count >= 2:
                 break
 
-        # Sert toplam sınır:
-        # 80 adaydan fazlasını
-        # hiçbir durumda açma.
-        if len(candidates) >= 80:
-            break
-
-    candidates = candidates[:80]
-
     print(
         "Cumhuriyet aday:",
         len(candidates)
     )
 
-    rows = []
-
-    for url in candidates:
-
-        try:
-            article = read_article(
-                "Cumhuriyet",
-                url,
-                today,
-                yesterday
-            )
-
-            if article:
-                rows.append(article)
-
-        except Exception:
-            continue
-
-    print(
-        "Cumhuriyet:",
-        len(rows)
+    return collect_urls(
+        "Cumhuriyet",
+        candidates,
+        today,
+        yesterday,
+        60
     )
 
-    return rows
+
+# ================================================
+# EKONOMİST
+# ================================================
+
+def collect_ekonomist(
+    today,
+    yesterday
+):
+    page = (
+        "https://www.ekonomist.com.tr/"
+        "yazarlar"
+    )
+
+    html = get_html(page)
+
+    links = extract_links(
+        html,
+        page
+    )
+
+    candidates = []
+    seen = set()
+
+    for url in links:
+
+        low = url.lower()
+
+        if (
+            "ekonomist.com.tr"
+            not in low
+        ):
+            continue
+
+        if url in seen:
+            continue
+
+        # Yazar profilinin kendisini değil,
+        # içerik bağlantılarını almaya çalış.
+        if (
+            "/yazarlar" in low
+            and low.rstrip("/")
+            == page.rstrip("/").lower()
+        ):
+            continue
+
+        # Genel menüleri ele.
+        blocked = (
+            "/kategori/",
+            "/etiket/",
+            "/arama",
+            "/video",
+            "/foto-galeri",
+        )
+
+        if any(
+            x in low
+            for x in blocked
+        ):
+            continue
+
+        # İçerik bağlantılarının önemli
+        # bölümü sonunda sayısal kimlik taşır.
+        if not re.search(
+            r'[-/]\d{4,}(?:[/?#]|$)',
+            low
+        ):
+            continue
+
+        seen.add(url)
+        candidates.append(url)
+
+    print(
+        "Ekonomist aday:",
+        len(candidates)
+    )
+
+    return collect_urls(
+        "Ekonomist",
+        candidates,
+        today,
+        yesterday,
+        40
+    )
 
 
-# -------------------------------------------------
+# ================================================
+# CAPITAL
+# ================================================
+
+def collect_capital(
+    today,
+    yesterday
+):
+    page = (
+        "https://www.capital.com.tr/"
+        "yazarlar"
+    )
+
+    html = get_html(page)
+
+    links = extract_links(
+        html,
+        page
+    )
+
+    candidates = []
+    seen = set()
+
+    for url in links:
+
+        low = url.lower()
+
+        if (
+            "capital.com.tr"
+            not in low
+        ):
+            continue
+
+        if url in seen:
+            continue
+
+        if (
+            low.rstrip("/")
+            == page.rstrip("/").lower()
+        ):
+            continue
+
+        blocked = (
+            "/kategori/",
+            "/etiket/",
+            "/arama",
+            "/video",
+            "/fotogaleri",
+        )
+
+        if any(
+            x in low
+            for x in blocked
+        ):
+            continue
+
+        # Yazar sayfasındaki içerik
+        # bağlantılarından olabilecekleri al.
+        if len(
+            url.split("/")
+        ) < 5:
+            continue
+
+        seen.add(url)
+        candidates.append(url)
+
+    print(
+        "Capital aday:",
+        len(candidates)
+    )
+
+    return collect_urls(
+        "Capital",
+        candidates,
+        today,
+        yesterday,
+        40
+    )
+
+
+# ================================================
 # ANA PROGRAM
-# -------------------------------------------------
+# ================================================
 
 def main():
 
@@ -735,100 +982,4 @@ def main():
     rows = []
 
 
-    try:
-        rows.extend(
-            collect_haberturk(
-                today,
-                yesterday
-            )
-        )
-
-    except Exception as error:
-        print(
-            "Habertürk hata:",
-            error
-        )
-
-
-    try:
-        rows.extend(
-            collect_sozcu(
-                today,
-                yesterday
-            )
-        )
-
-    except Exception as error:
-        print(
-            "Sözcü hata:",
-            error
-        )
-
-
-    try:
-        rows.extend(
-            collect_cumhuriyet(
-                today,
-                yesterday
-            )
-        )
-
-    except Exception as error:
-        print(
-            "Cumhuriyet hata:",
-            error
-        )
-
-
-    # Aynı URL iki kere varsa temizle.
-
-    final_rows = []
-
-    seen = set()
-
-    for article in rows:
-
-        url = article["url"]
-
-        if not url:
-            continue
-
-        if url in seen:
-            continue
-
-        seen.add(url)
-
-        final_rows.append(article)
-
-
-    final_rows.sort(
-        key=lambda item:
-            item["publishedAt"],
-        reverse=True
-    )
-
-
-    OUT.parent.mkdir(
-        parents=True,
-        exist_ok=True
-    )
-
-
-    OUT.write_text(
-        json.dumps(
-            final_rows,
-            ensure_ascii=False,
-            indent=2
-        ),
-        encoding="utf-8"
-    )
-
-
-    print(
-        "TOPLAM:",
-        len(final_rows)
-    )
-
-
-if __name__ == "__main__":
-    main()
+    collectors
