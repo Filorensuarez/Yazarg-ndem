@@ -40,6 +40,11 @@ WEB_SOURCES = [
         "url": "https://www.hurriyet.com.tr/yazarlar/",
         "domain": "hurriyet.com.tr",
     },
+        {
+        "name": "Forbes Türkiye",
+        "url": "https://www.forbes.com.tr/yazarlar",
+        "domain": "forbes.com.tr",
+    },
 ]
 
 
@@ -595,7 +600,131 @@ def discover_article_urls(
 
         return found
 
+    # FORBES TÜRKİYE:
+    # Önce /yazar/... profil bağlantılarını bul.
+    # Ardından profillerdeki gerçek makale bağlantılarını topla.
 
+    if source == "Forbes Türkiye":
+
+        profiles = []
+        profile_seen = set()
+
+        for href in links:
+
+            profile_url = urljoin(
+                page_url,
+                href
+            )
+
+            if domain not in profile_url:
+                continue
+
+            if not re.search(
+                r'https?://(?:www\.)?forbes\.com\.tr/yazar/[^/?#]+/?$',
+                profile_url,
+                flags=re.I
+            ):
+                continue
+
+            if profile_url in profile_seen:
+                continue
+
+            profile_seen.add(
+                profile_url
+            )
+
+            profiles.append(
+                profile_url
+            )
+
+        print(
+            "Forbes Türkiye yazar profili:",
+            len(profiles)
+        )
+
+        profiles = profiles[:100]
+
+        for profile_url in profiles:
+
+            try:
+
+                profile_raw = get(
+                    profile_url
+                ).decode(
+                    "utf-8",
+                    errors="ignore"
+                )
+
+                profile_links = re.findall(
+                    r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>',
+                    profile_raw,
+                    flags=re.I | re.S
+                )
+
+                for href in profile_links:
+
+                    article_url = urljoin(
+                        profile_url,
+                        href
+                    )
+
+                    if domain not in article_url:
+                        continue
+
+                    if article_url in seen:
+                        continue
+
+                    # Yazar profilinin kendisini alma.
+                    if re.search(
+                        r'/yazar/[^/?#]+/?$',
+                        article_url,
+                        flags=re.I
+                    ):
+                        continue
+
+                    # Forbes içerik sayfası olabilecek
+                    # bağlantıları al.
+                    if not re.search(
+                        r'forbes\.com\.tr/[^?#]+',
+                        article_url,
+                        flags=re.I
+                    ):
+                        continue
+
+                    # Menü, kategori ve genel sayfaları ele.
+                    blocked = (
+                        "/yazar/",
+                        "/kategori/",
+                        "/etiket/",
+                        "/arama",
+                        "/iletisim",
+                        "/hakkimizda",
+                        "/kunye",
+                    )
+
+                    if any(
+                        item in article_url.lower()
+                        for item in blocked
+                    ):
+                        continue
+
+                    seen.add(
+                        article_url
+                    )
+
+                    found.append(
+                        article_url
+                    )
+
+            except Exception as error:
+
+                print(
+                    "Forbes Türkiye profil atlandı:",
+                    profile_url,
+                    error
+                )
+
+        return found
     # SÖZCÜ:
     # Mevcut çalışan sistemi koru.
 
