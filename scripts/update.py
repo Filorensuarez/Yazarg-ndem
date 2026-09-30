@@ -9,15 +9,29 @@ from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 from pathlib import Path
 from html import unescape
+from urllib.parse import urljoin
 
 
 TR = timezone(timedelta(hours=3))
 OUT = Path("data/articles.json")
 
-SOURCES = [
+
+RSS_SOURCES = [
     (
         "Habertürk",
         "https://www.haberturk.com/rss/kategori/yazarlar.xml"
+    ),
+]
+
+
+WEB_SOURCES = [
+    (
+        "Sözcü",
+        "https://www.sozcu.com.tr/yazarlar"
+    ),
+    (
+        "Cumhuriyet",
+        "https://www.cumhuriyet.com.tr/yazarlar"
     ),
 ]
 
@@ -73,19 +87,19 @@ POL = (
 )
 
 
-def clean(s):
-    s = unescape(
+def clean(value):
+    value = unescape(
         re.sub(
             r"<[^>]+>",
             " ",
-            s or ""
+            value or ""
         )
     )
 
     return re.sub(
         r"\s+",
         " ",
-        s
+        value
     ).strip()
 
 
@@ -131,8 +145,10 @@ def get(url):
         url,
         headers={
             "User-Agent":
-            "Mozilla/5.0 YazarGundem/3.0"
-        },
+            "Mozilla/5.0 (Linux; Android 13) "
+            "AppleWebKit/537.36 "
+            "Chrome/120 Safari/537.36"
+        }
     )
 
     with urllib.request.urlopen(
@@ -193,13 +209,7 @@ def read_rss(
             )
         )
 
-        if not title:
-            continue
-
-        if not link:
-            continue
-
-        if not published:
+        if not title or not link or not published:
             continue
 
         if published.date() not in (
@@ -208,15 +218,12 @@ def read_rss(
         ):
             continue
 
-        # RSS tam içerik sağlıyorsa onu,
-        # sağlamıyorsa description alanını kullan.
         speech_text = (
             content
             if len(content) > len(description)
             else description
         )
 
-        # Artık 350 karakter sınırı YOK.
         speech_text = clean(
             speech_text
         )
@@ -226,28 +233,125 @@ def read_rss(
                 "category": category(
                     title + " " + speech_text
                 ),
-
                 "source": source,
-
                 "author":
                     author
                     or source + " Yazarı",
-
                 "title": title,
-
                 "summary": speech_text,
-
                 "speechText": speech_text,
-
                 "url": link,
-
                 "day":
                     "Bugün"
                     if published.date() == today
                     else "Dün",
-
                 "publishedAt":
                     published.isoformat(),
+            }
+        )
+
+    return articles
+
+
+def read_web_source(
+    source,
+    url,
+    today,
+    yesterday
+):
+    articles = []
+
+    try:
+        raw = get(url).decode(
+            "utf-8",
+            errors="ignore"
+        )
+
+    except Exception:
+        return articles
+
+    links = re.findall(
+        r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>(.*?)</a>',
+        raw,
+        flags=re.I | re.S
+    )
+
+    seen_links = set()
+
+    for href, label in links:
+
+        text = clean(label)
+
+        if not text:
+            continue
+
+        full_url = urljoin(
+            url,
+            href
+        )
+
+        if full_url in seen_links:
+            continue
+
+        if source == "Sözcü":
+
+            if "sozcu.com.tr" not in full_url:
+                continue
+
+            if (
+                "/yazar" not in full_url
+                and
+                "/kose-yazisi" not in full_url
+            ):
+                continue
+
+        elif source == "Cumhuriyet":
+
+            if "cumhuriyet.com.tr" not in full_url:
+                continue
+
+            if (
+                "/yazarlar/" not in full_url
+                and
+                "/koseyazisi/" not in full_url
+            ):
+                continue
+
+        if len(text) < 5:
+            continue
+
+        seen_links.add(
+            full_url
+        )
+
+        articles.append(
+            {
+                "category":
+                    category(text),
+
+                "source":
+                    source,
+
+                "author":
+                    source + " Yazarı",
+
+                "title":
+                    text,
+
+                "summary":
+                    "",
+
+                "speechText":
+                    "",
+
+                "url":
+                    full_url,
+
+                "day":
+                    "Bugün",
+
+                "publishedAt":
+                    datetime.now(TR).isoformat(),
             }
         )
 
@@ -268,7 +372,10 @@ def main():
 
     seen = set()
 
-    for source, url in SOURCES:
+
+    # RSS KAYNAKLARI
+
+    for source, url in RSS_SOURCES:
 
         try:
 
@@ -296,9 +403,45 @@ def main():
 
             print(
                 source,
-                "atlanıyor:",
+                "RSS atlanıyor:",
                 error
             )
+
+
+    # WEB YAZAR SAYFALARI
+
+    for source, url in WEB_SOURCES:
+
+        try:
+
+            results = read_web_source(
+                source,
+                url,
+                today,
+                yesterday
+            )
+
+            for article in results:
+
+                if article["url"] in seen:
+                    continue
+
+                seen.add(
+                    article["url"]
+                )
+
+                rows.append(
+                    article
+                )
+
+        except Exception as error:
+
+            print(
+                source,
+                "web atlanıyor:",
+                error
+            )
+
 
     rows.sort(
         key=lambda item:
@@ -306,10 +449,12 @@ def main():
         reverse=True
     )
 
+
     OUT.parent.mkdir(
         parents=True,
         exist_ok=True
     )
+
 
     OUT.write_text(
         json.dumps(
@@ -319,6 +464,7 @@ def main():
         ),
         encoding="utf-8"
     )
+
 
     print(
         len(rows),
