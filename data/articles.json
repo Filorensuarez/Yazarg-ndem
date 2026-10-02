@@ -1,47 +1,113 @@
 [
   {
+    "category": "Gündem",
+    "source": "Ekonomist",
+    "author": "ekonomist.com.tr",
+    "title": "193 metrelik kruvaziyer Bodrum'da: Yüzlerce turist ilçeye geldi",
+    "summary": "Muğla'nın gözde turizm merkezi Bodrum, kruvaziyer turizmi kapsamında yeni ziyaretçilerini ağırladı. İlçeye yanaşan \"Astoria Grande\" isimli kruvaziyer, 365 yolcuyu Bodrum'a getirdi.",
+    "speechText": "Muğla'nın gözde turizm merkezi Bodrum, kruvaziyer turizmi kapsamında yeni ziyaretçilerini ağırladı. İlçeye yanaşan \"Astoria Grande\" isimli kruvaziyer, 365 yolcuyu Bodrum'a getirdi.",
+    "url": "https://www.ekonomist.com.tr/turizm/193-metrelik-kruvaziyer-bodrum-da-yuzlerce-turist-ilceye-geldi-79449",
+    "day": "Bugün",
+    "publishedAt": "2026-10-02T15:19:42+03:00"
+  },
+  {
+    "category": "Gündem",
+    "source": "Ekonomist",
+    "author": "Ekonomist",
+    "title": "Crossover tasarımında yeni dönem: OMODA X tanıtılıyor",
+    "summary": "OMODA | JAECOO, Ekim ayında gerçekleştirilecek 2026 Chery Uluslararası Kullanıcı Zirvesi’nde “DRIVE TO THE NEXT VIBE” vizyonunu dünyayla buluşturmaya hazırlanıyor.",
+    "speechText": "OMODA | JAECOO, Ekim ayında gerçekleştirilecek 2026 Chery Uluslararası Kullanıcı Zirvesi’nde “DRIVE TO THE NEXT VIBE” vizyonunu dünyayla buluşturmaya hazırlanıyor.",
+    "url": "https://www.ekonomist.com.tr/otomotiv/crossover-tasariminda-yeni-donem-omoda-x-tanitiliyor-79448",
+    "day": "Bugün",
+    "publishedAt": "2026-10-02T14:58:33+03:00"
+  },
+  {
+    "category": "Gündem",
+    "source": "Ekonomist",
+    "author": "ekonomist.com.tr",
+    "title": "OpenAI’da bu kez gizli bilgi sızdırma krizi: Hassas bilgileri usulsüz kullanan 3 çalışanın işine son verildi",
+    "summary": "OpenAI’ın, yapay zeka modellerini analiz eden başka bir kuruluşa ilişkin çalışmalar da dahil olmak üzere \"hassas bilgileri hatalı kullandıkları\" gerekçesiyle 3 çalışanının işine son verdiği bildirildi.",
+    "speechText": "OpenAI’ın, yapay zeka modellerini analiz eden başka bir kuruluşa ilişkin çalışmalar da dahil olmak üzere \"hassas bilgileri hatalı kullandıkları\" gerekçesiyle 3 çalışanının işine son verdiği bildirildi.",
+    "url": "https://www.ekonomist.com.tr/dunya/openai-da-bu-kez-gizli-bilgi-sizdirma-krizi-hassas-bilgileri-usulsuz-kullanan-3-calisanin-isine-son-verildi-79447",
+    "day": "Bugün",
+    "publishedAt": "2026-10-02T14:51:14+03:00"
+  },
+  {
+    "category": "Gündem",
+    "source": "Ekonomist",
+    "author": "ekonomist.com.tr",
+    "title": "Eylülde en çok satılan otomobil markaları belli oldu: Zirvede hangi markalar var?",
+    "summary": "Otomotiv pazarı eylülde geçen yılın aynı dönemine göre yüzde 24,33 daralırken, otomobil satışlarındaki düşüş yüzde 27,80’i buldu. Pazardaki gerilemeye rağmen markalar arasındaki satış rekabeti devam etti. Peki, eylül ayında en çok hangi otomobil markası tercih edildi? Listenin zirvesinde hangi marka yer aldı? İşte eylül ayının en çok satan otomobil markaları...",
+    "speechText": "Otomotiv pazarı eylülde geçen yılın aynı dönemine göre yüzde 24,33 daralırken, otomobil satışlarındaki düşüş yüzde 27,80’i buldu. Pazardaki gerilemeye rağmen markalar arasındaki satış rekabeti devam etti. Peki, eylül ayında en çok hangi otomobil markası tercih edildi? Listenin zirvesinde hangi marka yer aldı? İşte eylül ayının en çok satan otomobil markaları...",
+    "url": "https://www.ekonomist.com.tr/otomotiv/eylulde-en-cok-satilan-otomobil-markalari-belli-oldu-zirvede-hangi-markalar-var--79446",
+    "day": "Bugün",
+    "publishedAt": "2026-10-02T14:49:54+03:00"
+  },
+  {
+    "category": "Siyaset",
+    "source": "Ekonomist",
+    "author": "ekonomist.com.tr",
+    "title": "\"Yabancı istihdam vizesi tamamen suistimal ediliyor\"",
+    "summary": "ABD Başkan Yardımcısı JD Vance, ABD'de işverenlerin yabancı istihdam etmelerine imkan tanıyan \"H1B\" vizesinin \"tamamen suistimal edildiğini\" savundu.",
+    "speechText": "ABD Başkan Yardımcısı JD Vance, ABD'de işverenlerin yabancı istihdam etmelerine imkan tanıyan \"H1B\" vizesinin \"tamamen suistimal edildiğini\" savundu.",
+    "url": "https://www.ekonomist.com.tr/dunya/yabanci-istihdam-vizesi-tamamen-suistimal-ediliyor-79445",
+    "day": "Bugün",
+    "publishedAt": "2026-10-02T14:40:13+03:00"
+  },
+  {
+    "category": "Ekonomi",
+    "source": "Ekonomist",
+    "author": "Anadolu Ajansı",
+    "title": "Euro Bölgesi'nde yıllık enflasyon Eylül'de arttı",
+    "summary": "Euro Bölgesi'nde yıllık enflasyon Eylül ayında enerji ürünlerindeki fiyat artışıyla birlikte yüzde 3,8'e çıktı.",
+    "speechText": "Euro Bölgesi'nde yıllık enflasyon Eylül ayında enerji ürünlerindeki fiyat artışıyla birlikte yüzde 3,8'e çıktı.",
+    "url": "https://www.ekonomist.com.tr/dunya/euro-bolgesi-nde-yillik-enflasyon-eylul-de-artti-79444",
+    "day": "Bugün",
+    "publishedAt": "2026-10-02T14:30:03+03:00"
+  },
+  {
+    "category": "Gündem",
+    "source": "Ekonomist",
+    "author": "ekonomist.com.tr",
+    "title": "Türkiye’nin dört bir yanına gönderiliyor: Kilosu 600 liradan başlıyor",
+    "summary": "Türkiye’nin önemli kestane üretim merkezlerinden Sinop’un Erfelek ilçesinde kuzu kestanesi hasadı başladı. İnce kabuğu ve kendine has tatlı aromasıyla öne çıkan dünyaca ünlü Erfelek kestanesi tezgahlardaki yerini alırken, yeni sezon ürünleri kilogramı 600 liradan satışa sunuluyor.",
+    "speechText": "Türkiye’nin önemli kestane üretim merkezlerinden Sinop’un Erfelek ilçesinde kuzu kestanesi hasadı başladı. İnce kabuğu ve kendine has tatlı aromasıyla öne çıkan dünyaca ünlü Erfelek kestanesi tezgahlardaki yerini alırken, yeni sezon ürünleri kilogramı 600 liradan satışa sunuluyor.",
+    "url": "https://www.ekonomist.com.tr/ekonomi-haberleri/turkiye-nin-dort-bir-yanina-gonderiliyor-kilosu-600-liradan-basliyor-79443",
+    "day": "Bugün",
+    "publishedAt": "2026-10-02T14:19:27+03:00"
+  },
+  {
     "category": "Ekonomi",
     "source": "Ekonomist",
     "author": "ekonomist.com.tr",
-    "title": "Artan enerji fiyatları ve enflasyon İtalya ile AB'yi karşı karşıya getirdi",
-    "summary": "İtalya Başbakanı Giorgia Meloni, küresel çapta artan enerji fiyatlarının enflasyona etkisi sebebiyle AB'nin bütçe kurallarında daha fazla esneklik sağlanmasını isterken AB'den \"üye ülkelere zaten daha fazla esnekliğin tanındığı\" yanıtı geldi.",
-    "speechText": "İtalya Başbakanı Giorgia Meloni, küresel çapta artan enerji fiyatlarının enflasyona etkisi sebebiyle AB'nin bütçe kurallarında daha fazla esneklik sağlanmasını isterken AB'den \"üye ülkelere zaten daha fazla esnekliğin tanındığı\" yanıtı geldi.",
-    "url": "https://www.ekonomist.com.tr/enerji/artan-enerji-fiyatlari-ve-enflasyon-italya-ile-ab-yi-karsi-karsiya-getirdi-79436",
+    "title": "Küresel piyasa değeri 3 trilyon dolara yaklaştı: Bitcoin yeniden 86 bin doların üzerinde",
+    "summary": "Kripto para piyasasında hareketlilik sürerken, bitcoinin fiyatı eylül ayındaki güçlü toparlanma ve ekim ayına yönelik tarihsel yükseliş beklentilerinin etkisiyle yeniden 86 bin doların üzerine çıktı.",
+    "speechText": "Kripto para piyasasında hareketlilik sürerken, bitcoinin fiyatı eylül ayındaki güçlü toparlanma ve ekim ayına yönelik tarihsel yükseliş beklentilerinin etkisiyle yeniden 86 bin doların üzerine çıktı.",
+    "url": "https://www.ekonomist.com.tr/ekonomi-haberleri/kuresel-piyasa-degeri-3-trilyon-dolara-yaklasti-bitcoin-yeniden-86-bin-dolarin-uzerinde-79442",
     "day": "Bugün",
-    "publishedAt": "2026-10-02T12:14:39+03:00"
+    "publishedAt": "2026-10-02T14:09:00+03:00"
   },
   {
     "category": "Gündem",
     "source": "Ekonomist",
     "author": "ekonomist.com.tr",
-    "title": "İnekleri artık o sağacak! Yerli robot günde 75 hayvanı sağıyor",
-    "summary": "Türkiye'de geliştirilen yerli ve milli otonom sağım robotu, hayvancılıkta sağım sürecini insan müdahalesine ihtiyaç duymadan gerçekleştiriyor. TÜME Vakfı'nın geliştirdiği robot, bir günde 75 hayvana kadar otomatik sağım yapabiliyor.",
-    "speechText": "Türkiye'de geliştirilen yerli ve milli otonom sağım robotu, hayvancılıkta sağım sürecini insan müdahalesine ihtiyaç duymadan gerçekleştiriyor. TÜME Vakfı'nın geliştirdiği robot, bir günde 75 hayvana kadar otomatik sağım yapabiliyor.",
-    "url": "https://www.ekonomist.com.tr/tarim/inekleri-artik-o-sagacak-yerli-robot-gunde-75-hayvani-sagiyor-79435",
+    "title": "Fon Kurulu'ndan açıklama: Hakkaniyet ve adalet gözetilerek gerekli çalışmalar hızlı ve etkili bir şekilde sürüyor",
+    "summary": "Cumhurbaşkanı Yardımcısı Cevdet Yılmaz başkanlığında toplanan Fon Kurulunda, Sermaye Piyasası Kurulunun (SPK) fon hesaplarına ilişkin ödeme takviminin değerlendirildiği bildirildi.",
+    "speechText": "Cumhurbaşkanı Yardımcısı Cevdet Yılmaz başkanlığında toplanan Fon Kurulunda, Sermaye Piyasası Kurulunun (SPK) fon hesaplarına ilişkin ödeme takviminin değerlendirildiği bildirildi.",
+    "url": "https://www.ekonomist.com.tr/ekonomi-haberleri/fon-kurulu-ndan-aciklama-hakkaniyet-ve-adalet-gozetilerek-gerekli-calismalar-hizli-ve-etkili-bir-sekilde-suruyor-79441",
     "day": "Bugün",
-    "publishedAt": "2026-10-02T12:07:57+03:00"
+    "publishedAt": "2026-10-02T13:35:15+03:00"
   },
   {
-    "category": "Gündem",
+    "category": "Siyaset",
     "source": "Ekonomist",
     "author": "ekonomist.com.tr",
-    "title": "Avrupa'da yeni büyüme dönemi: Pegasus, Çekya Hava Yolları'nı satın aldı",
-    "summary": "Pegasus Hava Yolları, gerekli tüm düzenleyici kurum onaylarının alınması ve kapanış koşullarının sağlanmasının ardından Çekya Hava Yolları (Czech Airlines-CSA) ve Smartwings Grubu'nun satın alma işlemini tamamladı.",
-    "speechText": "Pegasus Hava Yolları, gerekli tüm düzenleyici kurum onaylarının alınması ve kapanış koşullarının sağlanmasının ardından Çekya Hava Yolları (Czech Airlines-CSA) ve Smartwings Grubu'nun satın alma işlemini tamamladı.",
-    "url": "https://www.ekonomist.com.tr/haberler/avrupa-da-yeni-buyume-donemi-pegasus-cekya-hava-yollari-ni-satin-aldi-79434",
+    "title": "Güvenli ödeme 1 Aralık’a kaldı: Sistem nasıl işleyecek? İşte emlak sektörü temsilcilerinin talepleri",
+    "summary": "Emlak sektörü temsilcileri, taşınmaz satışlarında zorunlu Güvenli Ödeme Sistemi'nin uygulanma tarihinin 1 Aralık'a ertelenmesini olumlu bulurken, çalışmaların sistemin en iyi haliyle işleyecek şekilde tamamlanmasının önemli olduğunu ifade etti.",
+    "speechText": "Emlak sektörü temsilcileri, taşınmaz satışlarında zorunlu Güvenli Ödeme Sistemi'nin uygulanma tarihinin 1 Aralık'a ertelenmesini olumlu bulurken, çalışmaların sistemin en iyi haliyle işleyecek şekilde tamamlanmasının önemli olduğunu ifade etti.",
+    "url": "https://www.ekonomist.com.tr/emlak/guvenli-odeme-1-aralik-a-kaldi-sistem-nasil-isleyecek-iste-emlak-sektoru-temsilcilerinin-talepleri-79440",
     "day": "Bugün",
-    "publishedAt": "2026-10-02T11:56:16+03:00"
-  },
-  {
-    "category": "Gündem",
-    "source": "Ekonomist",
-    "author": "Anadolu Ajansı",
-    "title": "4 Ekim Pazar günü nüfus müdürlükleri KPSS için mesaide olacak",
-    "summary": "Kamu Personel Seçme Sınavı'nın (2026-KPSS) ön lisans oturumu dolayısıyla belirlenen nüfus müdürlükleri 4 Ekim Pazar günü açık olacak.",
-    "speechText": "Kamu Personel Seçme Sınavı'nın (2026-KPSS) ön lisans oturumu dolayısıyla belirlenen nüfus müdürlükleri 4 Ekim Pazar günü açık olacak.",
-    "url": "https://www.ekonomist.com.tr/egitim/4-ekim-pazar-gunu-nufus-mudurlukleri-kpss-icin-mesaide-olacak-79433",
-    "day": "Bugün",
-    "publishedAt": "2026-10-02T11:45:30+03:00"
+    "publishedAt": "2026-10-02T13:07:54+03:00"
   },
   {
     "category": "Siyaset",
@@ -53,17 +119,6 @@
     "url": "https://www.sozcu.com.tr/duygusuz-nesil-tehlikesi-p365491",
     "day": "Bugün",
     "publishedAt": "2026-10-02T11:34:12+03:00"
-  },
-  {
-    "category": "Gündem",
-    "source": "Ekonomist",
-    "author": "Ekonomist",
-    "title": "İstanbul'da bugün hava nasıl olacak? AKOM'dan sağanak uyarısı",
-    "summary": "AKOM, İstanbul'da yağışların gün içinde kuvvetleneceği uyarısında bulundu. Sabah saatlerinde etkili olan yağmurun öğle ve akşam gök gürültülü sağanağa dönüşmesi beklenirken, kentte yağışın gece saatlerine kadar sürmesi öngörülüyor. Sıcaklıkların ise 14 ila 18 derece arasında seyredeceği tahmin ediliyor.",
-    "speechText": "AKOM, İstanbul'da yağışların gün içinde kuvvetleneceği uyarısında bulundu. Sabah saatlerinde etkili olan yağmurun öğle ve akşam gök gürültülü sağanağa dönüşmesi beklenirken, kentte yağışın gece saatlerine kadar sürmesi öngörülüyor. Sıcaklıkların ise 14 ila 18 derece arasında seyredeceği tahmin ediliyor.",
-    "url": "https://www.ekonomist.com.tr/haberler/istanbul-da-bugun-hava-nasil-olacak-akom-dan-saganak-uyarisi-79432",
-    "day": "Bugün",
-    "publishedAt": "2026-10-02T11:30:14+03:00"
   },
   {
     "category": "Ekonomi",
@@ -88,17 +143,6 @@
     "publishedAt": "2026-10-02T10:59:59+03:00"
   },
   {
-    "category": "Gündem",
-    "source": "Ekonomist",
-    "author": "Anadolu Ajansı",
-    "title": "Otomotiv pazarında 9 aylık bilanço: Satışlar Ocak-Eylül döneminde düşüşte! İşte son veriler",
-    "summary": "Türkiye'de otomobil ve hafif ticari araç satışları, ocak-eylül döneminde yıllık bazda yüzde 13,39 azalarak 803 bin 465 oldu.",
-    "speechText": "Türkiye'de otomobil ve hafif ticari araç satışları, ocak-eylül döneminde yıllık bazda yüzde 13,39 azalarak 803 bin 465 oldu.",
-    "url": "https://www.ekonomist.com.tr/otomotiv/otomotiv-pazarinda-9-aylik-bilanco-satislar-ocak-eylul-doneminde-dususte-iste-son-veriler-79430",
-    "day": "Bugün",
-    "publishedAt": "2026-10-02T10:58:16+03:00"
-  },
-  {
     "category": "Ekonomi",
     "source": "Habertürk",
     "author": "Güntay Şimşek",
@@ -119,28 +163,6 @@
     "url": "https://www.ekonomist.com.tr/borsa/gelecek-hafta-3-sirket-temettu-dagitacak-5-9-ekim-temettu-takvimi-79429",
     "day": "Bugün",
     "publishedAt": "2026-10-02T10:38:31+03:00"
-  },
-  {
-    "category": "Ekonomi",
-    "source": "Ekonomist",
-    "author": "ekonomist.com.tr",
-    "title": "Türkiye'nin yapay zeka kullanımında dikkat çeken artış: Bir yılda yaklaşık ikiye katlandı",
-    "summary": "Türkiye'de yapay zeka kullanımı bir yılda dikkat çekici şekilde arttı. TÜİK verilerine göre, üretken yapay zeka kullanan bireylerin oranı yüzde 19,2'den yüzde 37,6'ya yükselirken, yapay zeka teknolojilerinden yararlanan girişimlerin oranı da yüzde 7,5'ten yüzde 14'e çıktı.",
-    "speechText": "Türkiye'de yapay zeka kullanımı bir yılda dikkat çekici şekilde arttı. TÜİK verilerine göre, üretken yapay zeka kullanan bireylerin oranı yüzde 19,2'den yüzde 37,6'ya yükselirken, yapay zeka teknolojilerinden yararlanan girişimlerin oranı da yüzde 7,5'ten yüzde 14'e çıktı.",
-    "url": "https://www.ekonomist.com.tr/teknoloji/turkiye-nin-yapay-zeka-kullaniminda-dikkat-ceken-artis-bir-yilda-yaklasik-ikiye-katlandi-79428",
-    "day": "Bugün",
-    "publishedAt": "2026-10-02T10:37:51+03:00"
-  },
-  {
-    "category": "Ekonomi",
-    "source": "Ekonomist",
-    "author": "ekonomist.com.tr",
-    "title": "Bakan Şimşek'ten KOBİ'lere finansman desteği mesajı: Erişim kolaylaşacak",
-    "summary": "Hazine ve Maliye Bakanı Mehmet Şimşek, KOBİ kredilerindeki büyüme sınırının yüzde 5'e çıkarılması ve TL zorunlu karşılıklarda bloke tesis oranlarının indirilmesini değerlendirdi. Şimşek, atılan adımların bankaların likidite yönetimini güçlendirirken KOBİ'lerin finansmana erişimini de kolaylaştıracağını bildirdi.",
-    "speechText": "Hazine ve Maliye Bakanı Mehmet Şimşek, KOBİ kredilerindeki büyüme sınırının yüzde 5'e çıkarılması ve TL zorunlu karşılıklarda bloke tesis oranlarının indirilmesini değerlendirdi. Şimşek, atılan adımların bankaların likidite yönetimini güçlendirirken KOBİ'lerin finansmana erişimini de kolaylaştıracağını bildirdi.",
-    "url": "https://www.ekonomist.com.tr/ekonomi-haberleri/bakan-simsek-ten-kobi-lere-finansman-destegi-mesaji-erisim-kolaylasacak-79427",
-    "day": "Bugün",
-    "publishedAt": "2026-10-02T10:27:52+03:00"
   },
   {
     "category": "Ekonomi",
