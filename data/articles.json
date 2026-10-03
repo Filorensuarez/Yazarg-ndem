@@ -1,5 +1,38 @@
 [
   {
+    "category": "Ekonomi",
+    "source": "Ekonomist",
+    "author": "ekonomist.com.tr",
+    "title": "Kredi kartı ve cep telefonu alımlarında yeni dönem: BDDK duyurdu",
+    "summary": "BDDK, cep telefonu alımlarında kullanılan tüketici kredilerinin vade sınırlarında değişikliğe giderken, kredi kartlarında asgari ödeme tutarının belirlenmesinde dikkate alınan limit eşiğini 100 bin liraya çıkardı.",
+    "speechText": "BDDK, cep telefonu alımlarında kullanılan tüketici kredilerinin vade sınırlarında değişikliğe giderken, kredi kartlarında asgari ödeme tutarının belirlenmesinde dikkate alınan limit eşiğini 100 bin liraya çıkardı.",
+    "url": "https://www.ekonomist.com.tr/gundem/kredi-karti-ve-cep-telefonu-alimlarinda-yeni-donem-bddk-duyurdu-79470",
+    "day": "Bugün",
+    "publishedAt": "2026-10-03T09:32:30+03:00"
+  },
+  {
+    "category": "Ekonomi",
+    "source": "Ekonomist",
+    "author": "ekonomist.com.tr",
+    "title": "Borsada geçen hafta yeni iş ilişkisi duyuran 11 şirket var",
+    "summary": "Borsa İstanbul'da 28-2 Ekim haftası 11 şirket 'yeni iş ilişkisi' başlığı altında KAP'a bildirimde bulundu.",
+    "speechText": "Borsa İstanbul'da 28-2 Ekim haftası 11 şirket 'yeni iş ilişkisi' başlığı altında KAP'a bildirimde bulundu.",
+    "url": "https://www.ekonomist.com.tr/borsa/borsada-gecen-hafta-yeni-is-iliskisi-duyuran-11-sirket-var--79471",
+    "day": "Bugün",
+    "publishedAt": "2026-10-03T09:32:22+03:00"
+  },
+  {
+    "category": "Ekonomi",
+    "source": "Ekonomist",
+    "author": "ekonomist.com.tr",
+    "title": "Bu hafta hangi yatırım aracı kazandırdı, hangisi kaybettirdi? İşte haftanın tablosu",
+    "summary": "Yatırım araçlarının haftalık getirileri belli oldu. BIST 100 endeksi yüzde 4,88, gram altın yüzde 1,53 ve avro/TL yüzde 0,69 gerilerken, dolar/TL haftayı yüzde 0,14 yükselişle tamamladı.",
+    "speechText": "Yatırım araçlarının haftalık getirileri belli oldu. BIST 100 endeksi yüzde 4,88, gram altın yüzde 1,53 ve avro/TL yüzde 0,69 gerilerken, dolar/TL haftayı yüzde 0,14 yükselişle tamamladı.",
+    "url": "https://www.ekonomist.com.tr/ekonomi-haberleri/bu-hafta-hangi-yatirim-araci-kazandirdi-hangisi-kaybettirdi-iste-haftanin-tablosu-79469",
+    "day": "Bugün",
+    "publishedAt": "2026-10-03T09:14:32+03:00"
+  },
+  {
     "category": "Gündem",
     "source": "Sözcü",
     "author": "Emin Çölaşan",
@@ -198,28 +231,6 @@
     "publishedAt": "2026-10-02T16:46:45+03:00"
   },
   {
-    "category": "Gündem",
-    "source": "Ekonomist",
-    "author": "ekonomist.com.tr",
-    "title": "Turkcell TEKNOFEST’te geleceğin teknolojilerini gençlerle buluşturdu",
-    "summary": "Turkcell, Şanlıurfa’da düzenlenen TEKNOFEST Güneydoğu’da, başta 5G ve yapay zekâ olmak üzere en yeni teknolojileri ziyaretçilerle buluşturdu.",
-    "speechText": "Turkcell, Şanlıurfa’da düzenlenen TEKNOFEST Güneydoğu’da, başta 5G ve yapay zekâ olmak üzere en yeni teknolojileri ziyaretçilerle buluşturdu.",
-    "url": "https://www.ekonomist.com.tr/teknoloji/turkcell-teknofest-te-gelecegin-teknolojilerini-genclerle-bulusturdu-79462",
-    "day": "Dün",
-    "publishedAt": "2026-10-02T16:43:40+03:00"
-  },
-  {
-    "category": "Ekonomi",
-    "source": "Ekonomist",
-    "author": "ekonomist.com.tr",
-    "title": "Metro Türkiye’de üst düzey atama",
-    "summary": "Metro Sırbistan CEO’su olarak görev yapan Nadir Kadji, 1 Ekim 2026 itibarıyla Metro Türkiye’nin yeni CEO’su olarak atandı.",
-    "speechText": "Metro Sırbistan CEO’su olarak görev yapan Nadir Kadji, 1 Ekim 2026 itibarıyla Metro Türkiye’nin yeni CEO’su olarak atandı.",
-    "url": "https://www.ekonomist.com.tr/sirketler/metro-turkiye-de-ust-duzey-atama-79461",
-    "day": "Dün",
-    "publishedAt": "2026-10-02T16:40:40+03:00"
-  },
-  {
     "category": "Ekonomi",
     "source": "Ekonomist",
     "author": "ekonomist.com.tr",
@@ -229,17 +240,6 @@
     "url": "https://www.ekonomist.com.tr/emlak/izmir-in-kalbine-dev-proje-79460",
     "day": "Dün",
     "publishedAt": "2026-10-02T16:36:12+03:00"
-  },
-  {
-    "category": "Gündem",
-    "source": "Ekonomist",
-    "author": "ekonomist.com.tr",
-    "title": "Filiz, yeni marka kimliğini tanıttı",
-    "summary": "Türkiye’nin köklü markalarından Filiz, yepyeni logosu ve ambalaj tasarımı için “Olur mu Dersin?” söylemi etrafında şekillenen yeni iletişim kampanyasının tanıtımını özel bir davetle gerçekleştirdi.",
-    "speechText": "Türkiye’nin köklü markalarından Filiz, yepyeni logosu ve ambalaj tasarımı için “Olur mu Dersin?” söylemi etrafında şekillenen yeni iletişim kampanyasının tanıtımını özel bir davetle gerçekleştirdi.",
-    "url": "https://www.ekonomist.com.tr/gida/filiz-yeni-marka-kimligini-tanitti-79459",
-    "day": "Dün",
-    "publishedAt": "2026-10-02T16:30:36+03:00"
   },
   {
     "category": "Siyaset",
